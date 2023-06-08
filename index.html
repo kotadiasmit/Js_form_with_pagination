@@ -1,59 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/home/brilworks/Documents/myFiles/Simple_Js_Form/index.css">
-  <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-  <title>Document</title>
-</head>
-<body>
-  <div class="user-location-container">
-    <h1>User Location Details</h1>
-    <div class="table-responsive location-table-container">
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col" class="col-srno-width">Sr No.</th>
-            <th scope="col" class="col-name-width">Name</th>
-            <th scope="col" class='col-location-width'>Location</th>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <script src="https://cdn.jsdelivr.net/npm/less@4.1.1"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>Document</title>
+  </head>
+  <body>
+    <div class="user-location-container">
+      <h1 class="mt-3">User Location Details</h1>
+      <div class="table-responsive location-table-container">
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col" class="col-srno-width">Sr No.</th>
+              <th scope="col" class="col-name-width">Name</th>
+              <th scope="col" class='col-location-width'>Location</th>
             <th scope="col" class="col-btn-width">Update/Delete</th>
           </tr>
         </thead>
-        <tbody id="table-body-container">
-          <tr>
-            <th scope="row">1</th>
-            <td>Mark </td>
-            <td>Otto</td>
-            <td><button type="button" class="update-delete-btn" id="update-btn">Update</button><span class="slash">/</span><button type="button" class="update-delete-btn" id="delete-btn">Delete</button></td>
-          </tr>
-          <tr>
-            <th scope="row">2</th>
-            <td>Jacob</td>
-            <td>Thor jglkr dsv trhrthht thhttrh trhet ethyejutj fdzfddf fw </td>
-            <td><button type="button" class="update-delete-btn" id="update-btn">Update</button><span class="slash">/</span><button type="button" class="update-delete-btn" id="delete-btn">Delete</button></td>
-          </tr>
-          <tr>
-            <th scope="row">3</th>
-            <td>Jacob</td>
-            <td>Larry the Bird</td>
-            <td><button type="button" class="update-delete-btn" id="update-btn">Update</button><span class="slash">/</span><button type="button" class="update-delete-btn" id="delete-btn">Delete</button></td>
-          </tr>
-        </tbody>
-  </table>
-</div>
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Add Location
-</button>
+        <tbody id="table-body-container"></tbody>
+      </table>
+    </div>
+    <!-- Button trigger modal -->
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" id="addLocationBtn" data-bs-target="#staticBackdrop">
+      Add Location
+    </button>
 
 <!-- Modal -->
+<div class="model-container" id="model-container">
 <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
+    <div class="modal-content" id="model-container">
       <div class="modal-header">
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
@@ -63,19 +45,20 @@
             <h1 class="heading">Add Location Data</h1>
             <label class='label' for="'username">User Name</label>
             <input class='input' id='username' type="text" placeholder="userName" autofocus/>
-            <label class='label' for='textarea'>Description</label>
+            <label class='label' for='textarea'>Location</label>
             <textarea class='textarea' id='textarea' row="5"></textarea>
           </form>
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closs-btn">Close</button>
         <button type="button" class="btn btn-primary" id="add-btn">Add</button>
       </div>
     </div>
   </div>
 </div>
 </div>
-<script src="/home/brilworks/Documents/myFiles/Simple_Js_Form/index.js"></script>
+</div>
+<script src="index.js"></script>
 </body>
 </html>

@@ -92,6 +92,10 @@ body {
   text-transform: capitalize;
 }
 
+.close-popup {
+  display: none;
+}
+
 @media (max-width: 768px) {
   .button {
     align-self: center;
