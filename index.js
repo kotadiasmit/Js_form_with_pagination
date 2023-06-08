@@ -11,12 +11,16 @@ let userLocationArray=[{userId:1, name:'Smit kotadia', location:'Sola Road, Ahme
 addLocationBtn.onclick=function(){
     inputUsername.value=''
     inputTextarea.value=''
-    modelContainerEle.classList.remove('close-popup')
+    //modelContainerEle.classList.remove('close-popup')
+    addBtn.setAttribute('data-bs-dismiss',"modal")
 }
 
 function addLocation(userDetails){
+    const rowId='row'+userDetails.userId
     const tableRowEle=document.createElement('tr')
+    tableRowEle.id=rowId
     tableBodyContainer.appendChild(tableRowEle)
+
     const srNo=document.createElement('th')
     srNo.setAttribute('scope','row')
     srNo.textContent= userDetails.userId
@@ -35,6 +39,8 @@ function addLocation(userDetails){
 
     const updateBtn=document.createElement('button')
     updateBtn.classList.add('update-delete-btn')
+    updateBtn.setAttribute('data-bs-toggle',"modal")
+    updateBtn.setAttribute('data-bs-target',"#staticBackdrop")
     updateBtn.textContent="Update"
     updateDelBtnContainer.appendChild(updateBtn)
 
@@ -49,28 +55,39 @@ function addLocation(userDetails){
     updateDelBtnContainer.appendChild(deleteBtn)
 
     deleteBtn.onclick=function(){
-        
+        tableBodyContainer.removeChild(tableRowEle)
     }
 
+    updateBtn.onclick=function(){
+        const arrayIndex=findIndex((each)=>'row'+each.userId===rowId)
+        const nameValue=userLocationArray[arrayIndex].name
+        const locationValue=userLocationArray[arrayIndex].location
+
+        
+
+    }
 
 }
-addBtn.onclick=function(){
+addBtn.onclick=function(event){
     const userNameValue=inputUsername.value
     const userLocationValue=inputTextarea.value
     const userId=userLocationArray[userLocationArray.length-1].userId+1
-   //console.log(userId)
-   if(userNameValue !== '' && userLocationValue !==""){
-   const userDetailsObj={
-    userId,
-    name:userNameValue,
+    //console.log(userId)
+    if(userNameValue !== '' && userLocationValue !==""){
+        const userDetailsObj={
+            userId,
+            name:userNameValue,
     location: userLocationValue
    }
    userLocationArray.push(userDetailsObj)
    addLocation(userDetailsObj)
-   modelContainerEle.classList.add('close-popup')
-   modelBackdrop.classList.remove('modal-backdrop fade show')
-
+   //modelContainerEle.classList.add('close-popup')
+   //modelBackdrop.classList.remove('modal-backdrop fade show')
+   
 }else{
+    console.log(event)
+    event.preventDefault()
+    addBtn.removeAttribute('data-bs-dismiss')
     alert('Please enter valid details')
 }
 
