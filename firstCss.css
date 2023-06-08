@@ -109,4 +109,22 @@ a:active{
     .container{
         width: 50%;
     }
+  }
+  .parent-element{
+    position: absolute;
   } 
+  .main-element {
+    position: sticky;
+    left: 90px;
+    bottom: 20px;
+    right: 10px;
+    top:50px;
+    background-color: yellow;
+    padding: 10px;
+    height: 30px;
+}
+
+.sibling-element {
+    padding: 10px;
+    background-color: #f2f2f2;
+}
