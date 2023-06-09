@@ -38,6 +38,9 @@ body{
         width: fit-content;
     }
 }
+.capitalize{
+    text-transform: capitalize;
+}
 .container{
     background-color: darkblue;
     background-size: cover;
@@ -79,13 +82,16 @@ body{
     margin-top: 5px;
     margin-bottom: 15px;
     background-color: #ececec;
+    text-transform: capitalize;
 }
 .textarea{
     @extend .input;
     height: 100px;
-    text-transform: capitalize; 
 }
 .close-popup{
+    display: none;
+}
+.update-add-location-btn{
     display: none;
 }
 

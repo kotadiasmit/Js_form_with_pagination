@@ -1,4 +1,17 @@
-const tableBodyContainer = document.getElementById('table-body-container')
+on alert popup model should be not close.
+autofocus not working
+
+    deleteLocation.onclick=function(){
+        const arrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
+        deleteModelLabel.textContent=userLocationArray[arrayIndex].name
+        tableBodyContainer.removeChild(tableRowEle)
+        userLocationArray.splice(arrayIndex,1)
+        console.log(userLocationArray)
+     }
+
+
+
+     const tableBodyContainer = document.getElementById('table-body-container')
 const addLocationBtn=document.getElementById('addLocationBtn')
 const formHeading=document.getElementById('form-heading')
 const inputUsername=document.getElementById('username')
@@ -10,10 +23,7 @@ const locationUpdateBtn=document.getElementById('location-update-btn')
 const modelContainerEle=document.getElementById('model-container')
 const modelBackdrop=document.getElementsByClassName('modal-backdrop')
 const deleteModelLabel=document.getElementById('deleteModelLabel')
-const deleteLocation=document.getElementById('deleteLocation')
 let userLocationArray=[]
-
-let deleteArrayIndex
 
 addLocationBtn.onclick=function(){
     inputUsername.value=''
@@ -25,20 +35,6 @@ addLocationBtn.onclick=function(){
     formHeading.textContent='Add Location Data'
     
 }
-
-deleteLocation.onclick=function(){
-     console.log(deleteArrayIndex)
-     userLocationArray.splice(deleteArrayIndex,1)
-    console.log(userLocationArray)
-    let updatedUserLocationArray=userLocationArray.map((each,index)=>({
-        userId: index+1,
-        name:each.name,
-        location:each.name
-    }))
-    userLocationArray=updatedUserLocationArray
-    tableBodyContainer.textContent=''
-    userLocationArray.map(each=>addLocation(each))
- }
 
 function addLocation(userDetails){
     const rowId='row'+userDetails.userId
@@ -83,8 +79,13 @@ function addLocation(userDetails){
     updateDelBtnContainer.appendChild(deleteBtn)
 
     deleteBtn.onclick=function(){
-        deleteArrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
-        deleteModelLabel.textContent=userLocationArray[deleteArrayIndex].name
+
+        tableBodyContainer.removeChild(tableRowEle)
+        const arrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
+        deleteModelLabel.textContent=userLocationArray[arrayIndex].name
+        userLocationArray.splice(arrayIndex,1)
+        console.log(userLocationArray)
+
      }
 
     updateBtn.onclick=function(){
@@ -119,12 +120,8 @@ function addLocation(userDetails){
 
 }
 addBtn.onclick=function(event){
-    let userNameValue=inputUsername.value.trim()
-    let userLocationValue=inputTextarea.value.trim()
-
-    // userNameValue.trim()
-    // userLocationValue.trim()
-
+    const userNameValue=inputUsername.value
+    const userLocationValue=inputTextarea.value
     let userId
     userLocationArray.length===0? userId=1:userId=userLocationArray[userLocationArray.length-1].userId+1
     //console.log(userId)

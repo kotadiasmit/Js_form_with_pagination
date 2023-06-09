@@ -32,8 +32,8 @@
     </button>
 
 <!-- Modal -->
-<div class="model-container" id="model-container">
-<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="model-container" id="model-container" >
+<div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" aria-labelledby="staticBackdropLabel" aria-hidden="true" autofocus="false">
   <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content" id="model-container">
       <div class="modal-header">
@@ -42,9 +42,9 @@
       <div class="modal-body">
         <div class="container">
           <form class="form-container">
-            <h1 class="heading">Add Location Data</h1>
+            <h1 class="heading" id="form-heading">Add Location Data</h1>
             <label class='label' for="'username">User Name</label>
-            <input class='input' id='username' type="text" placeholder="userName" autofocus/>
+            <input class='input' id='username' type="text" placeholder="userName"/>
             <label class='label' for='textarea'>Location</label>
             <textarea class='textarea' id='textarea' row="5"></textarea>
           </form>
@@ -52,11 +52,36 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="closs-btn">Close</button>
-        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="add-btn">Add</button>
+        <div class="" id="add-btn-container">
+          <button type="button" class="btn btn-primary" id="add-btn">Add</button>
+        </div>
+        <div class="update-add-location-btn" id="update-btn-container">
+          <button type="button" class="btn btn-primary" id="location-update-btn" data-bs-dismiss="modal">Update</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
+</div>
+
+<!--Delete Location Model-->
+<!-- Modal -->
+<div class="modal fade" id="deleteModel" data-bs-backdrop="static" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5 capitalize" id="deleteModelLabel"></h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="deleteLocation">Yes</button>
+      </div>
+    </div>
+  </div>
 </div>
 </div>
 <script src="index.js"></script>
