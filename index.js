@@ -1,152 +1,307 @@
+//@formate
+const tableContainer = document.getElementById('table-container')
+const viewLocationTable = document.getElementById('view-location-table')
 const tableBodyContainer = document.getElementById('table-body-container')
-const addLocationBtn=document.getElementById('addLocationBtn')
-const formHeading=document.getElementById('form-heading')
-const inputUsername=document.getElementById('username')
-const inputTextarea=document.getElementById('textarea')
-const updateBtnContainer=document.getElementById('update-btn-container')
-const addBtnContainer=document.getElementById('add-btn-container')
-const addBtn=document.getElementById('add-btn')
-const locationUpdateBtn=document.getElementById('location-update-btn')
-const modelContainerEle=document.getElementById('model-container')
-const modelBackdrop=document.getElementsByClassName('modal-backdrop')
-const deleteModelLabel=document.getElementById('deleteModelLabel')
-const deleteLocation=document.getElementById('deleteLocation')
-let userLocationArray=[]
+const addLocationBtn = document.getElementById('addLocationBtn')
+const formHeading = document.getElementById('form-heading')
+const inputUsername = document.getElementById('username')
+const inputTextarea = document.getElementById('textarea')
+const updateBtnContainer = document.getElementById('update-btn-container')
+const addBtnContainer = document.getElementById('add-btn-container')
+const addBtn = document.getElementById('add-btn')
+const locationUpdateBtn = document.getElementById('location-update-btn')
+const modelContainerEle = document.getElementById('model-container')
+const modelBackdrop = document.getElementsByClassName('modal-backdrop')
+const deleteModelLabel = document.getElementById('deleteModelLabel')
+const deleteLocation = document.getElementById('deleteLocation')
+const noDataHeading = document.getElementById('noDataHeading')
+const paginationEle = document.getElementById('pagination-container')
 
-let deleteArrayIndex
+let currentPageNo=1
+let displayRows=5
 
-addLocationBtn.onclick=function(){
-    inputUsername.value=''
-    inputTextarea.value=''
-    //modelContainerEle.classList.remove('close-popup')
+let userLocationArray = [
+    {userId:1, name: 'Smit Kotadia', location:'Sola Road, Ahmedabad, Gujarat, India'},
+    {userId:2, name: 'Smit', location:'Sola Road, Ahmedabad, Gujarat'},
+    {userId:3, name: 'Kotadia', location:'Sola Road, Ahmedabad'},
+    {userId:4, name: 'Raj', location:'Sola Road, India'},
+    {userId:5, name: 'rahul', location:'Ahmedabad, Gujarat, India'},
+    {userId:6, name: 'RKP', location:'Sola, Ahmedabad, Gujarat, India'},
+    {userId:7, name: 'Niks', location:'Sola, Ahmedabad, Gujarat'},
+    {userId:8, name: 'SSK', location:'Sola Road, Ahmedabad'},
+    {userId:9, name: 'Dhruv', location:'Sola, Ahmedabad, Gujarat, India'},
+    {userId:10, name: 'Parth', location:'Ahmedabad, Gujarat, India'},
+    {userId:11, name: 'aaa', location:'Gujarat, India'},
+    {userId:12, name: 'bb cc dd', location:'Sola Road, Ahmedabad'},
+    {userId:13, name: 'qq ww', location:'Sola Road, Ahmedabad, Gujarat'},
+    {userId:14, name: 'll dk', location:'Sola Road, Ahmedabad, India'},
+    //{userId:15, name: 'hh cc ee', location:'Sola Road, Gujarat, India'},
+    //{userId:16, name: 'Smit Shah', location:'Ahmedabad, Gujarat, India'},
+]
+const addLocationModal = document.getElementById('staticBackdrop')
+addLocationModal.addEventListener('shown.bs.modal', () => {
+    inputUsername.focus()
+})
+
+addLocationBtn.onclick = function () {
+    inputUsername.value = ''
+    inputTextarea.value = ''
     updateBtnContainer.classList.add('update-add-location-btn')
     addBtnContainer.classList.remove('update-add-location-btn')
-    addBtn.setAttribute('data-bs-dismiss',"modal")
-    formHeading.textContent='Add Location Data'
-    
+    addBtn.setAttribute('data-bs-dismiss', "modal")
+    formHeading.textContent = 'Add Location Data'
+
 }
 
-deleteLocation.onclick=function(){
-     console.log(deleteArrayIndex)
-     userLocationArray.splice(deleteArrayIndex,1)
-    console.log(userLocationArray)
-    let updatedUserLocationArray=userLocationArray.map((each,index)=>({
-        userId: index+1,
-        name:each.name,
-        location:each.name
-    }))
-    userLocationArray=updatedUserLocationArray
-    tableBodyContainer.textContent=''
-    userLocationArray.map(each=>addLocation(each))
- }
+// To update row
+let updateArrayIndex
+locationUpdateBtn.onclick = function (event) {
+    const userNameValue = inputUsername.value.trim()
+    const userLocationValue = inputTextarea.value.trim()
+    if (userNameValue !== '' && userLocationValue !== "") {
+        console.log(updateArrayIndex)
+        userLocationArray[updateArrayIndex].location = inputTextarea.value
+        userLocationArray[updateArrayIndex].name = inputUsername.value
+        console.log(userLocationArray[updateArrayIndex])
+        tableBodyContainer.textContent = ''
+        //userLocationArray.map(each => addLocation(each))
+        displayList(userLocationArray, displayRows, currentPageNo);
+    }
+    else {
+        console.log(event)
+        event.preventDefault()
+        alert('Please enter valid details')
+    }
+}
 
-function addLocation(userDetails){
-    const rowId='row'+userDetails.userId
-    const tableRowEle=document.createElement('tr')
+// To delete row
+let deleteArrayIndex
+deleteLocation.onclick = function () {
+    //console.log(deleteArrayIndex)
+    userLocationArray.splice(deleteArrayIndex, 1)
+    //console.log(userLocationArray)
+    let updatedUserLocationArray = userLocationArray.map((each, index) => ({
+        userId: index + 1,
+        name: each.name,
+        location: each.location
+    }))
+    userLocationArray = updatedUserLocationArray
+    tableBodyContainer.textContent = ''
+    //userLocationArray.map(each => addLocation(each))
+    displayList(userLocationArray, displayRows, currentPageNo);
+    userLocationArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : null
+}
+
+// To display table
+function addLocation(userDetails) {
+    const rowId = 'row' + userDetails.userId
+    const tableRowEle = document.createElement('tr')
     tableRowEle.classList.add('capitalize')
-    tableRowEle.id=rowId
+    tableRowEle.id = rowId
     tableBodyContainer.appendChild(tableRowEle)
 
-    const srNo=document.createElement('th')
-    srNo.setAttribute('scope','row')
-    srNo.textContent= userDetails.userId
+    const srNo = document.createElement('th')
+    srNo.setAttribute('scope', 'row')
+    srNo.textContent = userDetails.userId
     tableRowEle.appendChild(srNo)
 
-    const userName=document.createElement('td')
-    userName.textContent=userDetails.name
+    const userName = document.createElement('td')
+    userName.textContent = userDetails.name
     tableRowEle.appendChild(userName)
-    
-    const userLocation=document.createElement('td')
-    userLocation.textContent=userDetails.location
+
+    const userLocation = document.createElement('td')
+    userLocation.textContent = userDetails.location
     tableRowEle.appendChild(userLocation)
 
-    const updateDelBtnContainer=document.createElement('td')
+    const updateDelBtnContainer = document.createElement('td')
     tableRowEle.appendChild(updateDelBtnContainer)
 
-    const updateBtn=document.createElement('button')
+    const updateBtn = document.createElement('button')
     updateBtn.classList.add('update-delete-btn')
-    updateBtn.setAttribute('data-bs-toggle',"modal")
-    updateBtn.setAttribute('data-bs-target',"#staticBackdrop")
-    updateBtn.textContent="Update"
+    updateBtn.setAttribute('data-bs-toggle', "modal")
+    updateBtn.setAttribute('data-bs-target', "#staticBackdrop")
+    updateBtn.textContent = "Update"
     updateDelBtnContainer.appendChild(updateBtn)
 
-    const btnSpan=document.createElement('span')
-    btnSpan.textContent='/'
+    const btnSpan = document.createElement('span')
+    btnSpan.textContent = '/'
     btnSpan.classList.add('slash')
     updateDelBtnContainer.appendChild(btnSpan)
 
-    const deleteBtn=document.createElement('button')
+    const deleteBtn = document.createElement('button')
     deleteBtn.classList.add('update-delete-btn')
-    deleteBtn.textContent="Delete"
-    deleteBtn.setAttribute('data-bs-toggle',"modal") 
-    deleteBtn.setAttribute('data-bs-target',"#deleteModel")
+    deleteBtn.textContent = "Delete"
+    deleteBtn.setAttribute('data-bs-toggle', "modal")
+    deleteBtn.setAttribute('data-bs-target', "#deleteModel")
     updateDelBtnContainer.appendChild(deleteBtn)
 
-    deleteBtn.onclick=function(){
-        deleteArrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
-        deleteModelLabel.textContent=userLocationArray[deleteArrayIndex].name
-     }
+    deleteBtn.onclick = function () {
+        deleteArrayIndex = userLocationArray.findIndex((each) => 'row' + each.userId === rowId)
+        deleteModelLabel.textContent = userLocationArray[deleteArrayIndex].name
+    }
 
-    updateBtn.onclick=function(){
+    updateBtn.onclick = function () {
         updateBtnContainer.classList.remove('update-add-location-btn')
         addBtnContainer.classList.add('update-add-location-btn')
-        formHeading.textContent='Update Location Data'
-        const arrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
-        const nameValue=userLocationArray[arrayIndex].name
-        const locationValue=userLocationArray[arrayIndex].location
-        inputUsername.value=nameValue
-        inputTextarea.value=locationValue
-        locationUpdateBtn.onclick=updateLocation
+        formHeading.textContent = 'Update Location Data'
+        const arrayIndex = userLocationArray.findIndex((each) => 'row' + each.userId === rowId)
+        updateArrayIndex = arrayIndex
+        const nameValue = userLocationArray[arrayIndex].name
+        const locationValue = userLocationArray[arrayIndex].location
+        inputUsername.value = nameValue
+        inputTextarea.value = locationValue
     }
-    function updateLocation(event){
-        const userNameValue=inputUsername.value
-        const userLocationValue=inputTextarea.value
-        if(userNameValue !== '' && userLocationValue !==""){
-            const arrayIndex=userLocationArray.findIndex((each)=>'row'+each.userId===rowId)
-            console.log(arrayIndex)
-            userLocationArray[arrayIndex].location=inputTextarea.value
-            userLocationArray[arrayIndex].name=inputUsername.value
-            console.log(userLocationArray[arrayIndex])
-            tableBodyContainer.textContent=''
-            userLocationArray.map(each=>addLocation(each))
-        }
-        else{
-            console.log(event)
-            event.preventDefault()
-            alert('Please enter valid details')
-        }
-    }
-
 }
-addBtn.onclick=function(event){
-    let userNameValue=inputUsername.value.trim()
-    let userLocationValue=inputTextarea.value.trim()
 
-    // userNameValue.trim()
-    // userLocationValue.trim()
 
+// To add New Location
+addBtn.onclick = function (event) {
+    let userNameValue = inputUsername.value.trim()
+    let userLocationValue = inputTextarea.value.trim()
     let userId
-    userLocationArray.length===0? userId=1:userId=userLocationArray[userLocationArray.length-1].userId+1
+    userLocationArray.length === 0 ? userId = 1 : userId = userLocationArray[userLocationArray.length - 1].userId + 1
     //console.log(userId)
-    if(userNameValue !== '' && userLocationValue !==""){
-        const userDetailsObj={
+    if (userNameValue !== '' && userLocationValue !== "") {
+        const userDetailsObj = {
             userId,
-            name:userNameValue,
-    location: userLocationValue
-   }
-   userLocationArray.push(userDetailsObj)
-   addLocation(userDetailsObj)
-   //modelContainerEle.classList.add('close-popup')
-   //modelBackdrop.classList.remove('modal-backdrop fade show')
-   
-}else{
-    console.log(event)
-    event.preventDefault()
-    alert('Please enter valid details')
+            name: userNameValue,
+            location: userLocationValue
+        }
+        userLocationArray.push(userDetailsObj)
+        noDataHeading.textContent = ''
+        paginationEle.textContent=''
+        pagination()
+        if(userLocationArray.length>=displayRows*2){
+            currentPageNo=Math.ceil(userLocationArray.length/displayRows)
+            let current_btn = document.querySelector('.pagination li button.active');
+            console.log(current_btn)
+            current_btn.classList.remove('active');    
+            let lastPage_btn=document.getElementById(`pageBtn${currentPageNo}`)
+            lastPage_btn.classList.add('active');
+        }
+        displayList(userLocationArray, displayRows, currentPageNo);
+
+    } else {
+        console.log(event)
+        event.preventDefault()
+        alert('Please enter valid details')
+        addBtn.removeAttribute('data-bs-dismiss', "modal")
+    }
 }
 
+// To set Pagination
+function pagination(){
+    console.log(userLocationArray)
+    let pageCount=Math.ceil(userLocationArray.length/displayRows)
+
+    // prev tag
+    const prevEle=document.createElement('li')
+    prevEle.classList.add('page-item')
+    currentPageNo===1?prevEle.classList.add('disabled'):null
+    paginationEle.appendChild(prevEle)
+    
+    const prevBtnTag=document.createElement('button')
+    prevBtnTag.classList.add('page-link', 'prev-nxt-btn')
+    prevBtnTag.textContent='Prev'
+    prevEle.appendChild(prevBtnTag)  
+    
+    //page no tag
+    for (let i=1; i<=pageCount; i++ ){
+        const pageNoEle=document.createElement('li')
+        pageNoEle.classList.add('page-item')
+        paginationEle.appendChild(pageNoEle)
+        
+        const pageNoBtn=document.createElement('button')
+        pageNoBtn.id='pageBtn'+i
+        pageNoBtn.classList.add('page-link')
+        pageNoBtn.textContent=i
+        currentPageNo===i?pageNoBtn.classList.add('active'):null
+        pageNoEle.appendChild(pageNoBtn)
+        
+        clickedPageView(pageNoBtn,i)
+    }
+
+    //next tag
+    const nextEle=document.createElement('li')
+    nextEle.classList.add('page-item')
+    currentPageNo===pageCount?nextEle.classList.add('disabled'):null
+    paginationEle.appendChild(nextEle)
+    
+    const nextBtnTag=document.createElement('button')
+    nextBtnTag.classList.add('page-link', 'prev-nxt-btn')
+    nextBtnTag.textContent='Next'
+    nextEle.appendChild(nextBtnTag)
+
+    prevPageView(prevBtnTag, nextEle, prevEle, pageCount)
+    nextPageView(nextBtnTag, nextEle, prevEle, pageCount)
+    
+    function clickedPageView(pageNoBtn, i){
+        pageNoBtn.addEventListener('click', function(){
+            currentPageNo=i
+            console.log(currentPageNo)
+            let current_btn = document.querySelector('.pagination li button.active');
+            console.log(current_btn)
+            currentPageNo===1?prevEle.classList.add('disabled'):prevEle.classList.remove('disabled')
+            currentPageNo===pageCount?nextEle.classList.add('disabled'):nextEle.classList.remove('disabled')
+            current_btn.classList.remove('active');
+            pageNoBtn.classList.add('active');
+            displayList(userLocationArray, displayRows, currentPageNo);
+            
+        })
+    }
+    
 }
 
+//on Prev btn Clicked
+function prevPageView(prevBtnTag, nextEle, prevEle, pageCount){
+    prevBtnTag.addEventListener('click', function(){
+        if(currentPageNo>1){
+        currentPageNo=currentPageNo-1
+        console.log(currentPageNo)
+        let current_btn = document.querySelector('.pagination li button.active');
+        console.log(current_btn)
+        currentPageNo===1?prevEle.classList.add('disabled'):prevEle.classList.remove('disabled')
+        currentPageNo===pageCount?nextEle.classList.add('disabled'):nextEle.classList.remove('disabled')
+        current_btn.classList.remove('active');
+        let selected_btn=document.getElementById(`pageBtn${currentPageNo}`)
+        selected_btn.classList.add('active');
+        
+        displayList(userLocationArray, displayRows, currentPageNo);
+        }
+        
+    })
+}
 
+//on Next btn Clicked
+function nextPageView(nextBtnTag, nextEle, prevEle, pageCount){
+    nextBtnTag.addEventListener('click', function(){
+        if(currentPageNo<pageCount){
+        currentPageNo=currentPageNo+1
+        console.log(currentPageNo)
+        let current_btn = document.querySelector('.pagination li button.active');
+        console.log(current_btn)
+        currentPageNo===1?prevEle.classList.add('disabled'):prevEle.classList.remove('disabled')
+        currentPageNo===pageCount?nextEle.classList.add('disabled'):nextEle.classList.remove('disabled')
+        current_btn.classList.remove('active');
+        let selected_btn=document.getElementById(`pageBtn${currentPageNo}`)
+        selected_btn.classList.add('active');
+        
+        displayList(userLocationArray, displayRows, currentPageNo);
+        }
+        
+    })
+}
 
- 
+function displayList(userLocationArray, displayRows, currentPage){
+    tableBodyContainer.textContent = ''
+    currentPage--;
+    let start=displayRows*currentPage
+    let end=start+displayRows
+    let showItems=userLocationArray.slice(start, end)
+    for (const userDetails of showItems){
+        addLocation(userDetails)
+    }
+}
+
+displayList(userLocationArray, displayRows, currentPageNo);
+pagination()

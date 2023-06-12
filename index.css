@@ -1,3 +1,4 @@
+/** @format */
 body {
   margin: 0px;
   padding: 0px;
@@ -52,14 +53,6 @@ body {
   height: 100%;
 }
 
-.heading {
-  color: green;
-  font-size: 40px;
-  font-family: "Times New Roman", Times, serif;
-  text-align: center;
-  margin: 12px 0px 12px 0px;
-}
-
 .form-container {
   background-image: url("https://img.freepik.com/free-photo/pastel-blue-vignette-concrete-textured-background_53876-102637.jpg");
   background-size: cover;
@@ -70,19 +63,23 @@ body {
   background-color: white;
   border-radius: 10px;
   padding: 10px;
-}
-
-.label {
   font-family: serif;
-  font-size: 22px;
+}
+.form-container .main-heading {
+  color: green;
+  font-size: 40px;
+  text-align: center;
+  margin: 12px 0px 12px 0px;
+}
+.form-container .label {
+  font-size: 18px;
   margin-left: 2px;
   align-self: flex-start;
   padding-left: 5%;
 }
-
-.input, .textarea {
+.form-container .input, .form-container .textarea {
   width: 90%;
-  font-size: 18px;
+  font-size: 16px;
   border: 1px solid gray;
   padding: 2px 3px 2px 5px;
   border-radius: 3px;
@@ -91,28 +88,12 @@ body {
   background-color: #ececec;
   text-transform: capitalize;
 }
-
-.textarea {
+.form-container .textarea {
   height: 100px;
-}
-
-.close-popup {
-  display: none;
 }
 
 .update-add-location-btn {
   display: none;
-}
-
-@media (max-width: 768px) {
-  .button {
-    align-self: center;
-  }
-}
-@media (min-width: 768px) {
-  .container {
-    width: 50%;
-  }
 }
 
 /*# sourceMappingURL=index.css.map */
