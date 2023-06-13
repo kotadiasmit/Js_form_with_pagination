@@ -1,8 +1,11 @@
 //@formate
+const addLocationBtn = document.getElementById('addLocationBtn')
+const searchInput = document.getElementById('search-input')
+const searchSelectContainer=document.getElementById('search-select-container')
+const searchBtn = document.getElementById('search-btn')
 const tableContainer = document.getElementById('table-container')
 const viewLocationTable = document.getElementById('view-location-table')
 const tableBodyContainer = document.getElementById('table-body-container')
-const addLocationBtn = document.getElementById('addLocationBtn')
 const formHeading = document.getElementById('form-heading')
 const inputUsername = document.getElementById('username')
 const inputTextarea = document.getElementById('textarea')
@@ -35,23 +38,47 @@ let userLocationArray = [
     {userId:12, name: 'bb cc dd', location:'Sola Road, Ahmedabad'},
     {userId:13, name: 'qq ww', location:'Sola Road, Ahmedabad, Gujarat'},
     {userId:14, name: 'll dk', location:'Sola Road, Ahmedabad, India'},
-    //{userId:15, name: 'hh cc ee', location:'Sola Road, Gujarat, India'},
-    //{userId:16, name: 'Smit Shah', location:'Ahmedabad, Gujarat, India'},
+    {userId:15, name: 'hh cc ee', location:'Sola Road, Gujarat, India'},
+    {userId:16, name: 'Smit Shah', location:'Ahmedabad, Gujarat, India'},
 ]
+
+let searchedValueArray=userLocationArray
+let searchValue=''
+let searchBy='search_by_name'
+
+//search for name or location
+searchBtn.addEventListener('click', ()=>{
+     searchValue=searchInput.value.toLowerCase()
+     searchBy=searchSelectContainer.value
+     console.log(searchBy)
+     searchBy==='search_by_name'?searchedValueArray=userLocationArray.filter(each=>each.name.toLocaleLowerCase().includes(searchValue)):searchedValueArray=userLocationArray.filter(each=>each.location.toLocaleLowerCase().includes(searchValue))
+     console.log(searchedValueArray)
+     tableBodyContainer.textContent = ''
+     paginationEle.textContent=''
+     currentPageNo=1
+     pagination(searchedValueArray)
+     displayList(searchedValueArray, displayRows, currentPageNo);
+     searchedValueArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : noDataHeading.textContent=''
+
+
+
+})
+
 const addLocationModal = document.getElementById('staticBackdrop')
 addLocationModal.addEventListener('shown.bs.modal', () => {
     inputUsername.focus()
 })
 
-addLocationBtn.onclick = function () {
+userLocationArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : null
+
+addLocationBtn.addEventListener('click',()=> {
     inputUsername.value = ''
     inputTextarea.value = ''
     updateBtnContainer.classList.add('update-add-location-btn')
     addBtnContainer.classList.remove('update-add-location-btn')
     addBtn.setAttribute('data-bs-dismiss', "modal")
     formHeading.textContent = 'Add Location Data'
-
-}
+})
 
 // To update row
 let updateArrayIndex
@@ -65,7 +92,9 @@ locationUpdateBtn.onclick = function (event) {
         console.log(userLocationArray[updateArrayIndex])
         tableBodyContainer.textContent = ''
         //userLocationArray.map(each => addLocation(each))
-        displayList(userLocationArray, displayRows, currentPageNo);
+        console.log(searchValue)
+        searchValue!==''?displayList(searchedValueArray,displayRows, currentPageNo):displayList(userLocationArray, displayRows, currentPageNo);
+        
     }
     else {
         console.log(event)
@@ -88,8 +117,19 @@ deleteLocation.onclick = function () {
     userLocationArray = updatedUserLocationArray
     tableBodyContainer.textContent = ''
     //userLocationArray.map(each => addLocation(each))
-    displayList(userLocationArray, displayRows, currentPageNo);
-    userLocationArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : null
+     paginationEle.textContent=''
+     if(searchValue!==''){
+        searchedValueArray=userLocationArray.filter(each=>each.name.toLocaleLowerCase().includes(searchValue))
+        searchedValueArray.length%displayRows===0? currentPageNo=currentPageNo-1:currentPageNo
+        pagination(searchedValueArray)
+        displayList(searchedValueArray,displayRows, currentPageNo)
+        searchedValueArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : noDataHeading.textContent=''
+     }else{
+        userLocationArray.length%displayRows===0? currentPageNo=currentPageNo-1:currentPageNo
+        pagination(userLocationArray)
+        displayList(userLocationArray, displayRows, currentPageNo);
+        userLocationArray.length === 0 ? noDataHeading.textContent = 'No Data Found.' : noDataHeading.textContent=''
+     }
 }
 
 // To display table
@@ -170,16 +210,41 @@ addBtn.onclick = function (event) {
         userLocationArray.push(userDetailsObj)
         noDataHeading.textContent = ''
         paginationEle.textContent=''
-        pagination()
-        if(userLocationArray.length>=displayRows*2){
-            currentPageNo=Math.ceil(userLocationArray.length/displayRows)
+
+        // pagination(userLocationArray)
+        
+        // // To display last active page where location added
+        // currentPageNo=Math.ceil(userLocationArray.length/displayRows)
+        // //console.log('added to page no. '+currentPageNo)
+        // let current_btn = document.querySelector('.pagination li button.active');
+        // //console.log(current_btn)
+        // current_btn.classList.remove('active');    
+        // let lastPage_btn=document.getElementById(`pageBtn${currentPageNo}`)
+        // lastPage_btn.classList.add('active');
+        // displayList(userLocationArray, displayRows, currentPageNo);
+
+        if(searchValue!==''){
+            searchBy==='search_by_name'?searchedValueArray=userLocationArray.filter(each=>each.name.toLocaleLowerCase().includes(searchValue)):searchedValueArray=userLocationArray.filter(each=>each.location.toLocaleLowerCase().includes(searchValue))
+            pagination(searchedValueArray)
+            // To display last active page where location added
+            currentPageNo=Math.ceil(searchedValueArray.length/displayRows)
             let current_btn = document.querySelector('.pagination li button.active');
-            console.log(current_btn)
+            //console.log(current_btn)
             current_btn.classList.remove('active');    
             let lastPage_btn=document.getElementById(`pageBtn${currentPageNo}`)
             lastPage_btn.classList.add('active');
-        }
-        displayList(userLocationArray, displayRows, currentPageNo);
+            displayList(searchedValueArray,displayRows, currentPageNo)
+         }else{
+             pagination(userLocationArray)
+            // To display last active page where location added
+            currentPageNo=Math.ceil(searchedValueArray.length/displayRows)
+            let current_btn = document.querySelector('.pagination li button.active');
+            //console.log(current_btn)
+            current_btn.classList.remove('active');    
+            let lastPage_btn=document.getElementById(`pageBtn${currentPageNo}`)
+            lastPage_btn.classList.add('active');
+            displayList(userLocationArray, displayRows, currentPageNo);
+         }
 
     } else {
         console.log(event)
@@ -190,7 +255,7 @@ addBtn.onclick = function (event) {
 }
 
 // To set Pagination
-function pagination(){
+function pagination(userLocationArray){
     console.log(userLocationArray)
     let pageCount=Math.ceil(userLocationArray.length/displayRows)
 
@@ -243,7 +308,8 @@ function pagination(){
             console.log(current_btn)
             currentPageNo===1?prevEle.classList.add('disabled'):prevEle.classList.remove('disabled')
             currentPageNo===pageCount?nextEle.classList.add('disabled'):nextEle.classList.remove('disabled')
-            current_btn.classList.remove('active');
+            // condition added as when last page all item deleted current_btn will be null
+            current_btn!==null?current_btn.classList.remove('active'):null;
             pageNoBtn.classList.add('active');
             displayList(userLocationArray, displayRows, currentPageNo);
             
@@ -304,4 +370,4 @@ function displayList(userLocationArray, displayRows, currentPage){
 }
 
 displayList(userLocationArray, displayRows, currentPageNo);
-pagination()
+pagination(userLocationArray)
