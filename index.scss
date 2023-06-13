@@ -6,6 +6,9 @@ body {
 button:active {
   background-color: gray !important;
 }
+input {
+  outline: none;
+}
 .user-location-container {
   display: flex;
   flex-direction: column;
