@@ -66,8 +66,6 @@ searchBtn.addEventListener("click", () => {
   searchValue = searchInput.value.toLowerCase();
   searchBy = searchSelectContainer.value;
   searchBySelectedValue();
-  //console.log(searchBy);
-  //console.log(searchedValueArray);
   tableBodyContainer.textContent = "";
   paginationEle.textContent = "";
   currentPageNo = 1;
@@ -98,18 +96,14 @@ locationUpdateBtn.onclick = function (event) {
   const userNameValue = inputUsername.value.trim();
   const userLocationValue = inputTextarea.value.trim();
   if (userNameValue !== "" && userLocationValue !== "") {
-    //console.log(updateArrayIndex);
     userLocationArray[updateArrayIndex].location = inputTextarea.value;
     userLocationArray[updateArrayIndex].name = inputUsername.value;
-    //console.log(userLocationArray[updateArrayIndex]);
     tableBodyContainer.textContent = "";
     //userLocationArray.map(each => addLocation(each))
-    //console.log(searchValue);
     searchValue !== ""
       ? displayList(searchedValueArray, displayRows, currentPageNo)
       : displayList(userLocationArray, displayRows, currentPageNo);
   } else {
-    //console.log(event);
     event.preventDefault();
     alert("Please enter valid details");
   }
@@ -118,9 +112,7 @@ locationUpdateBtn.onclick = function (event) {
 // To delete row
 let deleteArrayIndex;
 deleteLocation.onclick = function () {
-  //console.log(deleteArrayIndex)
   userLocationArray.splice(deleteArrayIndex, 1);
-  //console.log(userLocationArray)
   let updatedUserLocationArray = userLocationArray.map((each, index) => ({
     userId: index + 1,
     name: each.name,
@@ -132,7 +124,6 @@ deleteLocation.onclick = function () {
   paginationEle.textContent = "";
   if (searchValue !== "") {
     searchBySelectedValue();
-    //console.log(searchedValueArray);
     searchedValueArray.length % displayRows === 0
       ? (currentPageNo = currentPageNo - 1)
       : currentPageNo;
@@ -226,7 +217,6 @@ addBtn.onclick = function (event) {
   userLocationArray.length === 0
     ? (userId = 1)
     : (userId = userLocationArray[userLocationArray.length - 1].userId + 1);
-  //console.log(userId)
   if (userNameValue !== "" && userLocationValue !== "") {
     const userDetailsObj = {
       userId,
@@ -236,44 +226,36 @@ addBtn.onclick = function (event) {
     userLocationArray.push(userDetailsObj);
     noDataHeading.textContent = "";
     paginationEle.textContent = "";
-    //console.log(searchValue);
     searchValue = searchInput.value;
-
-    // pagination(userLocationArray)
-    // // To display last active page where location added
-    // currentPageNo=Math.ceil(userLocationArray.length/displayRows)
-    // //console.log('added to page no. '+currentPageNo)
-    // let current_btn = document.querySelector('.pagination li button.active');
-    // //console.log(current_btn)
-    // current_btn.classList.remove('active');
-    // let lastPage_btn=document.getElementById(`pageBtn${currentPageNo}`)
-    // lastPage_btn.classList.add('active');
-    // displayList(userLocationArray, displayRows, currentPageNo);
 
     if (searchValue !== "") {
       searchBySelectedValue();
-      pagination(searchedValueArray);
+      searchedValueArray.length === 0
+        ? (noDataHeading.textContent = "No Data Found.")
+        : (noDataHeading.textContent = "");
       // To display last active page where location added
       currentPageNo = Math.ceil(searchedValueArray.length / displayRows);
-      let current_btn = document.querySelector(".pagination li button.active");
-      //console.log(current_btn)
-      current_btn.classList.remove("active");
-      let lastPage_btn = document.getElementById(`pageBtn${currentPageNo}`);
-      lastPage_btn.classList.add("active");
+      pagination(searchedValueArray);
+      if (currentPageNo) {
+        let current_btn = document.querySelector(
+          ".pagination li button.active"
+        );
+        current_btn.classList.remove("active");
+        let lastPage_btn = document.getElementById(`pageBtn${currentPageNo}`);
+        lastPage_btn.classList.add("active");
+      }
       displayList(searchedValueArray, displayRows, currentPageNo);
     } else {
-      pagination(userLocationArray);
       // To display last active page where location added
-      currentPageNo = Math.ceil(searchedValueArray.length / displayRows);
+      currentPageNo = Math.ceil(userLocationArray.length / displayRows);
+      pagination(userLocationArray);
       let current_btn = document.querySelector(".pagination li button.active");
-      //console.log(current_btn)
       current_btn.classList.remove("active");
       let lastPage_btn = document.getElementById(`pageBtn${currentPageNo}`);
       lastPage_btn.classList.add("active");
       displayList(userLocationArray, displayRows, currentPageNo);
     }
   } else {
-    //console.log(event);
     event.preventDefault();
     alert("Please enter valid details");
     addBtn.removeAttribute("data-bs-dismiss", "modal");
@@ -281,79 +263,90 @@ addBtn.onclick = function (event) {
 };
 
 // To set Pagination
-function pagination(userLocationArray) {
-  //console.log(userLocationArray);
-  let pageCount = Math.ceil(userLocationArray.length / displayRows);
+function pagination(updatedLocationArray) {
+  if (updatedLocationArray.length === 0) {
+    paginationEle.textContent = "";
+  } else {
+    let pageCount = Math.ceil(updatedLocationArray.length / displayRows);
 
-  // prev tag
-  const prevEle = document.createElement("li");
-  prevEle.classList.add("page-item");
-  currentPageNo === 1 ? prevEle.classList.add("disabled") : null;
-  paginationEle.appendChild(prevEle);
+    // prev tag
+    const prevEle = document.createElement("li");
+    prevEle.classList.add("page-item");
+    currentPageNo === 1
+      ? prevEle.classList.add("disabled")
+      : prevEle.classList.remove("disable");
+    paginationEle.appendChild(prevEle);
 
-  const prevBtnTag = document.createElement("button");
-  prevBtnTag.classList.add("page-link", "prev-nxt-btn");
-  prevBtnTag.textContent = "Prev";
-  prevEle.appendChild(prevBtnTag);
+    const prevBtnTag = document.createElement("button");
+    prevBtnTag.classList.add("page-link", "prev-nxt-btn");
+    prevBtnTag.textContent = "Prev";
+    prevEle.appendChild(prevBtnTag);
 
-  //page no tag
-  for (let i = 1; i <= pageCount; i++) {
-    const pageNoEle = document.createElement("li");
-    pageNoEle.classList.add("page-item");
-    paginationEle.appendChild(pageNoEle);
+    //page no tag
+    for (let i = 1; i <= pageCount; i++) {
+      const pageNoEle = document.createElement("li");
+      pageNoEle.classList.add("page-item");
+      paginationEle.appendChild(pageNoEle);
 
-    const pageNoBtn = document.createElement("button");
-    pageNoBtn.id = "pageBtn" + i;
-    pageNoBtn.classList.add("page-link");
-    pageNoBtn.textContent = i;
-    currentPageNo === i ? pageNoBtn.classList.add("active") : null;
-    pageNoEle.appendChild(pageNoBtn);
+      const pageNoBtn = document.createElement("button");
+      pageNoBtn.id = "pageBtn" + i;
+      pageNoBtn.classList.add("page-link");
+      pageNoBtn.textContent = i;
+      currentPageNo === i ? pageNoBtn.classList.add("active") : null;
+      pageNoEle.appendChild(pageNoBtn);
 
-    clickedPageView(pageNoBtn, i);
-  }
+      clickedPageView(pageNoBtn, i);
+    }
 
-  //next tag
-  const nextEle = document.createElement("li");
-  nextEle.classList.add("page-item");
-  currentPageNo === pageCount ? nextEle.classList.add("disabled") : null;
-  paginationEle.appendChild(nextEle);
+    //next tag
+    const nextEle = document.createElement("li");
+    nextEle.classList.add("page-item");
+    currentPageNo === pageCount
+      ? nextEle.classList.add("disabled")
+      : nextEle.classList.remove("disabled");
+    paginationEle.appendChild(nextEle);
 
-  const nextBtnTag = document.createElement("button");
-  nextBtnTag.classList.add("page-link", "prev-nxt-btn");
-  nextBtnTag.textContent = "Next";
-  nextEle.appendChild(nextBtnTag);
+    const nextBtnTag = document.createElement("button");
+    nextBtnTag.classList.add("page-link", "prev-nxt-btn");
+    nextBtnTag.textContent = "Next";
+    nextEle.appendChild(nextBtnTag);
 
-  prevPageView(prevBtnTag, nextEle, prevEle, pageCount);
-  nextPageView(nextBtnTag, nextEle, prevEle, pageCount);
+    prevPageView(updatedLocationArray, prevBtnTag, nextEle, prevEle, pageCount);
+    nextPageView(updatedLocationArray, nextBtnTag, nextEle, prevEle, pageCount);
 
-  function clickedPageView(pageNoBtn, i) {
-    pageNoBtn.addEventListener("click", function () {
-      currentPageNo = i;
-      //console.log(currentPageNo);
-      let current_btn = document.querySelector(".pagination li button.active");
-      //console.log(current_btn);
-      currentPageNo === 1
-        ? prevEle.classList.add("disabled")
-        : prevEle.classList.remove("disabled");
-      currentPageNo === pageCount
-        ? nextEle.classList.add("disabled")
-        : nextEle.classList.remove("disabled");
-      // condition added as when last page all item deleted current_btn will be null
-      current_btn !== null ? current_btn.classList.remove("active") : null;
-      pageNoBtn.classList.add("active");
-      displayList(userLocationArray, displayRows, currentPageNo);
-    });
+    function clickedPageView(pageNoBtn, i) {
+      pageNoBtn.addEventListener("click", function () {
+        currentPageNo = i;
+        let current_btn = document.querySelector(
+          ".pagination li button.active"
+        );
+        currentPageNo === 1
+          ? prevEle.classList.add("disabled")
+          : prevEle.classList.remove("disabled");
+        currentPageNo === pageCount
+          ? nextEle.classList.add("disabled")
+          : nextEle.classList.remove("disabled");
+        // condition added as when last page all item deleted current_btn will be null
+        current_btn !== null ? current_btn.classList.remove("active") : null;
+        pageNoBtn.classList.add("active");
+        displayList(updatedLocationArray, displayRows, currentPageNo);
+      });
+    }
   }
 }
 
 //on Prev btn Clicked
-function prevPageView(prevBtnTag, nextEle, prevEle, pageCount) {
+function prevPageView(
+  updatedLocationArray,
+  prevBtnTag,
+  nextEle,
+  prevEle,
+  pageCount
+) {
   prevBtnTag.addEventListener("click", function () {
     if (currentPageNo > 1) {
       currentPageNo = currentPageNo - 1;
-      //console.log(currentPageNo);
       let current_btn = document.querySelector(".pagination li button.active");
-      //console.log(current_btn);
       currentPageNo === 1
         ? prevEle.classList.add("disabled")
         : prevEle.classList.remove("disabled");
@@ -364,19 +357,23 @@ function prevPageView(prevBtnTag, nextEle, prevEle, pageCount) {
       let selected_btn = document.getElementById(`pageBtn${currentPageNo}`);
       selected_btn.classList.add("active");
 
-      displayList(userLocationArray, displayRows, currentPageNo);
+      displayList(updatedLocationArray, displayRows, currentPageNo);
     }
   });
 }
 
 //on Next btn Clicked
-function nextPageView(nextBtnTag, nextEle, prevEle, pageCount) {
+function nextPageView(
+  updatedLocationArray,
+  nextBtnTag,
+  nextEle,
+  prevEle,
+  pageCount
+) {
   nextBtnTag.addEventListener("click", function () {
     if (currentPageNo < pageCount) {
       currentPageNo = currentPageNo + 1;
-      //console.log(currentPageNo);
       let current_btn = document.querySelector(".pagination li button.active");
-      //console.log(current_btn);
       currentPageNo === 1
         ? prevEle.classList.add("disabled")
         : prevEle.classList.remove("disabled");
@@ -387,17 +384,17 @@ function nextPageView(nextBtnTag, nextEle, prevEle, pageCount) {
       let selected_btn = document.getElementById(`pageBtn${currentPageNo}`);
       selected_btn.classList.add("active");
 
-      displayList(userLocationArray, displayRows, currentPageNo);
+      displayList(updatedLocationArray, displayRows, currentPageNo);
     }
   });
 }
 
-function displayList(userLocationArray, displayRows, currentPage) {
+function displayList(updatedLocationArray, displayRows, currentPage) {
   tableBodyContainer.textContent = "";
   currentPage--;
   let start = displayRows * currentPage;
   let end = start + displayRows;
-  let showItems = userLocationArray.slice(start, end);
+  let showItems = updatedLocationArray.slice(start, end);
   for (const userDetails of showItems) {
     addLocation(userDetails);
   }
