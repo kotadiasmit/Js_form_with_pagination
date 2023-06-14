@@ -52,14 +52,13 @@ let searchedValueArray = userLocationArray;
 let searchValue = "";
 let searchBy = "search_by_name";
 
-const searchBySelectedValue = () =>
-  searchBy === "search_by_name"
-    ? (searchedValueArray = userLocationArray.filter((each) =>
-        each.name.toLocaleLowerCase().includes(searchValue)
-      ))
-    : (searchedValueArray = userLocationArray.filter((each) =>
-        each.location.toLocaleLowerCase().includes(searchValue)
-      ));
+const searchBySelectedValue = () => {
+  searchedValueArray = userLocationArray.filter((userDetail) =>
+    searchBy === "search_by_name"
+      ? userDetail.name.toLowerCase().includes(searchValue)
+      : userDetail.location.toLowerCase().includes(searchValue)
+  );
+};
 
 //search for name or location
 searchBtn.addEventListener("click", () => {
@@ -71,9 +70,8 @@ searchBtn.addEventListener("click", () => {
   currentPageNo = 1;
   pagination(searchedValueArray);
   displayList(searchedValueArray, displayRows, currentPageNo);
-  searchedValueArray.length === 0
-    ? (noDataHeading.textContent = "No Data Found.")
-    : (noDataHeading.textContent = "");
+  noDataHeading.textContent =
+    searchedValueArray.length === 0 ? "No Data Found." : "";
 });
 
 const addLocationModal = document.getElementById("staticBackdrop");
@@ -120,7 +118,6 @@ deleteLocation.onclick = function () {
   }));
   userLocationArray = updatedUserLocationArray;
   tableBodyContainer.textContent = "";
-  //userLocationArray.map(each => addLocation(each))
   paginationEle.textContent = "";
   if (searchValue !== "") {
     searchBySelectedValue();
@@ -129,18 +126,16 @@ deleteLocation.onclick = function () {
       : currentPageNo;
     pagination(searchedValueArray);
     displayList(searchedValueArray, displayRows, currentPageNo);
-    searchedValueArray.length === 0
-      ? (noDataHeading.textContent = "No Data Found.")
-      : (noDataHeading.textContent = "");
+    noDataHeading.textContent =
+      searchedValueArray.length === 0 ? "No Data Found." : "";
   } else {
     userLocationArray.length % displayRows === 0
       ? (currentPageNo = currentPageNo - 1)
       : currentPageNo;
     pagination(userLocationArray);
     displayList(userLocationArray, displayRows, currentPageNo);
-    userLocationArray.length === 0
-      ? (noDataHeading.textContent = "No Data Found.")
-      : (noDataHeading.textContent = "");
+    noDataHeading.textContent =
+      userLocationArray.length === 0 ? "No Data Found." : "";
   }
 };
 
@@ -230,9 +225,8 @@ addBtn.onclick = function (event) {
 
     if (searchValue !== "") {
       searchBySelectedValue();
-      searchedValueArray.length === 0
-        ? (noDataHeading.textContent = "No Data Found.")
-        : (noDataHeading.textContent = "");
+      noDataHeading.textContent =
+        searchedValueArray.length === 0 ? "No Data Found." : "";
       // To display last active page where location added
       currentPageNo = Math.ceil(searchedValueArray.length / displayRows);
       pagination(searchedValueArray);
